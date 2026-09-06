@@ -4,14 +4,15 @@ import { Video, X } from "lucide-react";
 import MessageInput from "./MessageInput";
 import MessageContainer from "./MessageContainer";
 import ChatPlaceholder from "./ChatPlaceholder";
+import GroupMembersDialog from "./GroupMemberDialog";
 
 
 const RightPanel = () => {
-    const selectedConversation = null;
+    const selectedConversation = true;
     if (!selectedConversation) return <ChatPlaceholder />;
 
     const conversationName = "John Doe";
-
+    const isGroup = true;
     return (
         <div className='w-3/4 flex flex-col'>
             <div className='w-full sticky top-0 z-50'>
@@ -25,8 +26,8 @@ const RightPanel = () => {
                             </AvatarFallback>
                         </Avatar>
                         <div className='flex flex-col'>
-                            <p>{conversationName}</p>
-                            {/* {isGroup && <GroupMembersDialog />} */}
+                            <p>{conversationName} </p>
+                            {isGroup && <GroupMembersDialog />}
                         </div>
                     </div>
 
