@@ -1,11 +1,13 @@
 import { ListFilter, LogOut, MessageSquareDiff, Search, User } from "lucide-react";
-import { Input } from "./ui/input";
-import ThemeSwitch from "./ThemeSwitch";
+import { Input } from "../ui/input";
+import ThemeSwitch from "../ThemeSwitch";
+import { conversations } from "@/dummy-data/db";
+import Conversation from "../Conversation";
 
 
 
 const LeftPanel = () => {
-    const conversations = [];
+
 
     return (
         <div className='w-1/4 border-gray-600 border-r'>
@@ -40,7 +42,9 @@ const LeftPanel = () => {
             {/* Chat List */}
             <div className='my-3 flex flex-col gap-0 max-h-[80%] overflow-auto'>
                 {/* Conversations will go here*/}
-
+                {conversations && conversations.map((conversation) => (
+                    <Conversation conversation={conversation} key={conversation._id} />
+                ))}
                 {conversations?.length === 0 && (
                     <>
                         <p className='text-center text-gray-500 text-sm mt-3'>No conversations yet</p>

@@ -1,7 +1,7 @@
 "use client";
 
-import LeftPanel from "@/components/LeftPanel";
-import RightPanel from "@/components/RightPanel";
+import LeftPanel from "@/components/home/LeftPanel";
+import RightPanel from "@/components/home/RightPanel";
 import { useTheme } from "next-themes";
 
 export default function Home() {
