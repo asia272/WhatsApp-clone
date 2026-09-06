@@ -1,5 +1,5 @@
 import { formatDate } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { MessageSeenSvg } from "@/lib/svgs";
 import { ImageIcon, Users, VideoIcon } from "lucide-react";
 
