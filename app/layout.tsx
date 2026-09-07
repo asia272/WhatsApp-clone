@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./providers/theme-provider";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +27,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-          {children}
+          <ClerkProvider>
+            {children}
+          </ClerkProvider>
         </ThemeProvider>
       </body>
     </html>
