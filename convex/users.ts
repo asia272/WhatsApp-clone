@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, } from "./_generated/server";
 
 export const syncUser = mutation({
     args: {
@@ -19,6 +19,7 @@ export const syncUser = mutation({
         return await ctx.db.insert("users", {
             ...args,
             role: "user",
+            isOnline: true
         });
     },
 });
