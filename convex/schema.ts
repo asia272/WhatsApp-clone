@@ -13,4 +13,12 @@ export default defineSchema({
         admin: v.boolean(),
         clerkId: v.string(),
     }).index("by_clerkId", ["clerkId"]),
+
+    conversations: defineTable({
+        participants: v.array(v.id("users")),
+        isGroup: v.boolean(),
+        groupName: v.optional(v.string()),
+        groupImage: v.optional(v.string()),
+        admin: v.optional(v.id("users"))
+    })
 })
