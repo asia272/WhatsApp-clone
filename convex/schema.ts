@@ -11,5 +11,5 @@ export default defineSchema({
 
         role: v.union(v.literal("user"), v.literal("admin")),
         clerkId: v.string(),
-    }).index("by_clerk_id", ["clerkId"]),
+    }).index("by_clerkId", ["clerkId"]),
 })

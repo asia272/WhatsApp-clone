@@ -5,6 +5,8 @@ import { ThemeProvider } from "./providers/theme-provider";
 import { ClerkProvider, SignInButton } from "@clerk/nextjs";
 import ConvexClientProvider from "./providers/ConvexClientProvider";
 
+
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -34,6 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 <SignInButton>
                   Sigin
                 </SignInButton>
+
               </div>
 
               {children}

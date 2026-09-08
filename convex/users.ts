@@ -23,28 +23,49 @@ export const syncUser = mutation({
         });
     },
 });
+export const setUserOffline = mutation({
+    args: {
+        clerkId: v.string(),
+    },
+    handler: async (ctx, { clerkId }) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_clerkId", (q) =>
+                q.eq("clerkId", clerkId)
+            )
+            .unique();
 
-// export const getUsers = query({
-//     handler: async (ctx) => {
-//         const identity = await ctx.auth.getUserIdentity();
+        if (!user) {
+            console.log("User not found:", clerkId);
+            return;
+        }
 
-//         if (!identity) throw new Error("User not found");
+        await ctx.db.patch(user._id, {
+            isOnline: false,
+        });
+    },
+});
 
+export const setUserOnline = mutation({
+    args: {
+        clerkId: v.string(),
+    },
 
-//         const users = await ctx.db.query("users").collect();
+    handler: async (ctx, { clerkId }) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_clerkId", (q) =>
+                q.eq("clerkId", clerkId)
+            )
+            .unique();
 
-//         return users;
-//     },
-// });
+        if (!user) {
+            console.log("User not found:", clerkId);
+            return;
+        }
 
-// export const getUserByClerkId = query({
-//     args: { clerkId: v.string() },
-//     handler: async (ctx, args) => {
-//         const user = await ctx.db
-//             .query("users")
-//             .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
-//             .first();
-
-//         return user;
-//     },
-// });
+        await ctx.db.patch(user._id, {
+            isOnline: true,
+        });
+    },
+});

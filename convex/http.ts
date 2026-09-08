@@ -18,6 +18,7 @@ http.route({
             );
         }
 
+        // Get Svix webhook headers
         const svixId = request.headers.get("svix-id");
         const svixTimestamp = request.headers.get("svix-timestamp");
         const svixSignature = request.headers.get("svix-signature");
@@ -29,11 +30,14 @@ http.route({
         }
 
         // IMPORTANT:
-        // Read the original body as text for Svix verification.
+        // Read the original request body as text.
+        // Svix signature verification requires the raw body.
         const body = await request.text();
 
+        // Create Svix webhook verifier
         const wh = new Webhook(webhookSecret);
 
+        // Verify webhook signature
         try {
             wh.verify(body, {
                 "svix-id": svixId,
@@ -48,20 +52,29 @@ http.route({
             });
         }
 
-        // Parse the body after verification
+        // Parse webhook body AFTER signature verification
         const evt = JSON.parse(body) as {
             type: string;
             data: {
                 id: string;
-                email_addresses: {
+
+                // Used by session.ended
+                user_id?: string;
+
+                // Used by user.created
+                email_addresses?: {
                     email_address: string;
                 }[];
-                first_name: string | null;
-                last_name: string | null;
-                image_url: string;
-            };
-        };
 
+                first_name?: string | null;
+                last_name?: string | null;
+                image_url?: string;
+            };
+        }; console.log("CLERK WEBHOOK EVENT:", JSON.stringify(evt, null, 2));
+
+        // --------------------------------------------------
+        // USER CREATED
+        // --------------------------------------------------
         if (evt.type === "user.created") {
             const {
                 id,
@@ -71,7 +84,7 @@ http.route({
                 image_url,
             } = evt.data;
 
-            const email = email_addresses[0]?.email_address;
+            const email = email_addresses?.[0]?.email_address;
 
             if (!email) {
                 return new Response("User email is missing", {
@@ -96,7 +109,59 @@ http.route({
                 });
             }
         }
+        // SSSION CREATED
+        if (evt.type === "session.created") {
+            const clerkId = evt.data.user_id;
 
+            if (!clerkId) {
+                return new Response("User ID missing", {
+                    status: 400,
+                });
+            }
+
+            await ctx.runMutation(api.users.setUserOnline, {
+                clerkId,
+            });
+        }
+        // --------------------------------------------------
+        // SESSION ENDED
+        // --------------------------------------------------
+        if (
+            evt.type === "session.ended" ||
+            evt.type === "session.removed" ||
+            evt.type === "session.revoked"
+        ) {
+            const clerkId = evt.data.user_id;
+
+            if (!clerkId) {
+                console.error(
+                    "Clerk user ID is missing from session.ended webhook"
+                );
+
+                return new Response("User ID missing", {
+                    status: 400,
+                });
+            }
+
+            try {
+                await ctx.runMutation(api.users.setUserOffline, {
+                    clerkId,
+                });
+            } catch (error) {
+                console.error(
+                    "Error setting user offline:",
+                    error
+                );
+
+                return new Response("Error setting user offline", {
+                    status: 500,
+                });
+            }
+        }
+
+        // --------------------------------------------------
+        // SUCCESS
+        // --------------------------------------------------
         return new Response("Webhook processed successfully", {
             status: 200,
         });
