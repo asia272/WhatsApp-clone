@@ -12,17 +12,24 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { ImageIcon, MessageSquareDiff } from "lucide-react";
-import { users } from "@/dummy-data/db";
+
 import { Id } from "@/convex/_generated/dataModel";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 const UserListDialog = () => {
-    // const [selectedUsers, setSelectedUsers] = useState<Id<"users">[]>([]);
-    const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+    const [selectedUsers, setSelectedUsers] = useState<Id<"users">[]>([]);
     const [groupName, setGroupName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [renderedImage, setRenderedImage] = useState("");
     const imgRef = useRef<HTMLInputElement>(null);
+
+    const me = useQuery(api.users.getMe);
+    const users = useQuery(api.users.getAllUsers);
+    const createConversation = useMutation(
+        api.conversations.createConversation
+    );
 
     useEffect(() => {
         if (!selectedImage) return setRenderedImage("");
@@ -31,6 +38,38 @@ const UserListDialog = () => {
         reader.readAsDataURL(selectedImage);
     }, [selectedImage]);
 
+    const handleCreateConversation = async () => {
+        if (selectedUsers.length === 0) return;
+        setIsLoading(true);
+        try {
+            const isGroup = selectedUsers.length > 1;
+
+            let conversationId;
+            if (!isGroup) {
+                conversationId = await createConversation({
+                    participants: [...selectedUsers, me?._id!],
+                    isGroup: false,
+                });
+            } else {
+
+                let groupImage;
+
+                conversationId = await createConversation({
+                    participants: [...selectedUsers, me?._id!],
+                    isGroup: true,
+                    admin: me?._id!,
+                    groupName,
+                    groupImage,
+                });
+            }
+
+        } catch (err) {
+
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
     return (
         <Dialog>
             <DialogTrigger>
@@ -104,6 +143,7 @@ const UserListDialog = () => {
                 <div className='flex justify-between'>
                     <Button variant={"outline"}>Cancel</Button>
                     <Button
+                        onClick={handleCreateConversation}
                         disabled={selectedUsers.length === 0 || (selectedUsers.length > 1 && !groupName) || isLoading}
                     >
                         {/* spinner */}
