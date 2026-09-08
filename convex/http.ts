@@ -123,6 +123,33 @@ http.route({
                 clerkId,
             });
         }
+        if (evt.type === "user.updated") {
+            const clerkId = evt.data.id;
+
+            const name = `${evt.data.first_name ?? ""} ${evt.data.last_name ?? ""
+                }`.trim();
+
+            try {
+                await ctx.runMutation(api.users.updateUserProfile, {
+                    clerkId,
+                    name,
+                    image: evt.data.image_url,
+                });
+
+                console.log(
+                    `Updated profile for user: ${clerkId}`
+                );
+            } catch (error) {
+                console.error(
+                    "Error updating user profile:",
+                    error
+                );
+
+                return new Response("Error updating user profile", {
+                    status: 500,
+                });
+            }
+        }
         // --------------------------------------------------
         // SESSION ENDED
         // --------------------------------------------------

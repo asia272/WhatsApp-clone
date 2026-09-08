@@ -124,3 +124,31 @@ export const getAllUsers = query({
         );
     },
 });
+export const updateUserProfile = mutation({
+    args: {
+        clerkId: v.string(),
+        name: v.string(),
+        image: v.optional(v.string()),
+    },
+
+    handler: async (ctx, { clerkId, name, image }) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_clerkId", (q) =>
+                q.eq("clerkId", clerkId)
+            )
+            .unique();
+
+        if (!user) {
+            console.log("User not found:", clerkId);
+            return;
+        }
+
+        await ctx.db.patch(user._id, {
+            name,
+            image,
+        });
+
+        console.log(`Updated profile for user: ${clerkId}`);
+    },
+});
