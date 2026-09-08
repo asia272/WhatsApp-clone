@@ -101,6 +101,7 @@ export const users = [
         image: "https://randomuser.me/api/portraits/men/67.jpg",
         admin: true,
         isOnline: true,
+        clerkId: "user293m953k4u004klweo9024"
     },
     {
         _id: "user2",
@@ -108,6 +109,7 @@ export const users = [
         email: "janedoe@email.com",
         image: "https://randomuser.me/api/portraits/women/67.jpg",
         isOnline: true,
+        clerkId: "user293m953k4u004klweo9024"
     },
     {
         _id: "user3",
@@ -115,5 +117,6 @@ export const users = [
         email: "alice@email.com",
         image: "https://randomuser.me/api/portraits/women/68.jpg",
         isOnline: false,
+        clerkId: "user293m953k4u004klweo9024"
     },
 ];

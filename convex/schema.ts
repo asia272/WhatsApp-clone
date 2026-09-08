@@ -9,7 +9,8 @@ export default defineSchema({
         image: v.optional(v.string()),
         isOnline: v.boolean(),
 
-        role: v.union(v.literal("user"), v.literal("admin")),
+        // role: v.union(v.literal("user"), v.literal("admin")),
+        admin: v.boolean(),
         clerkId: v.string(),
     }).index("by_clerkId", ["clerkId"]),
 })

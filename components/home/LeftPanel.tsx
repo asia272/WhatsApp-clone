@@ -4,6 +4,7 @@ import ThemeSwitch from "../ThemeSwitch";
 import { conversations } from "@/dummy-data/db";
 import Conversation from "../Conversation";
 import { UserButton } from "@clerk/nextjs";
+import UserListDialog from "../user-list-dialog";
 
 
 
@@ -17,7 +18,8 @@ const LeftPanel = () => {
                 <div className='flex justify-between bg-gray-primary p-3 items-center'>
                     <UserButton />
                     <div className='flex items-center gap-3'>
-                        <MessageSquareDiff size={20} /> {/* TODO: This line will be replaced with <UserListDialog /> */}
+
+                        <UserListDialog />
                         <ThemeSwitch />
                     </div>
                 </div>
