@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, } from "./_generated/server";
+import { mutation, query, } from "./_generated/server";
 
 export const syncUser = mutation({
     args: {
@@ -67,5 +67,60 @@ export const setUserOnline = mutation({
         await ctx.db.patch(user._id, {
             isOnline: true,
         });
+    },
+});
+
+// -------------------------
+// GET CURRENT USER
+// -------------------------
+export const getMe = query({
+    handler: async (ctx) => {
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            return null;
+        }
+
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_clerkId", (q) =>
+                q.eq("clerkId", identity.subject)
+            )
+            .unique();
+
+        return user;
+    },
+});
+
+// -------------------------
+// GET ALL USERS
+// -------------------------
+export const getAllUsers = query({
+    handler: async (ctx) => {
+        const identity = await ctx.auth.getUserIdentity();
+
+        if (!identity) {
+            return [];
+        }
+
+        const currentUser = await ctx.db
+            .query("users")
+            .withIndex("by_clerkId", (q) =>
+                q.eq("clerkId", identity.subject)
+            )
+            .unique();
+
+        if (!currentUser) {
+            return [];
+        }
+
+        const users = await ctx.db
+            .query("users")
+            .collect();
+
+        // Don't return the currently logged-in user
+        return users.filter(
+            (user) => user.clerkId !== identity.subject
+        );
     },
 });
