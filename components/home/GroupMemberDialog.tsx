@@ -9,8 +9,17 @@ import {
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Crown } from "lucide-react";
+import { Conversation } from "@/store/chat-store";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
-const GroupMembersDialog = () => {
+type GroupMemberDialogProps = {
+    selectedConversation: Conversation
+}
+const GroupMembersDialog = ({ selectedConversation }: GroupMemberDialogProps) => {
+
+    const users = useQuery(api.users.getGroupMembers, { conversationId: selectedConversation._id });
+
     return (
         <Dialog>
             <DialogTrigger>

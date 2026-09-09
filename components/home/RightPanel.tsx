@@ -16,7 +16,7 @@ const RightPanel = () => {
 
     const conversationName = selectedConversation.groupName || selectedConversation.name;
     const conversationImage = selectedConversation.image || selectedConversation.groupImage;
-    const isGroup = true;
+
 
     return (
         <div className='w-3/4 flex flex-col'>
@@ -32,7 +32,7 @@ const RightPanel = () => {
                         </Avatar>
                         <div className='flex flex-col'>
                             <p>{conversationName} </p>
-                            {selectedConversation.isGroup && <GroupMembersDialog />}
+                            {selectedConversation.isGroup && <GroupMembersDialog selectedConversation={selectedConversation} />}
                         </div>
                     </div>
 
