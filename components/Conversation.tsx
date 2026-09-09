@@ -8,7 +8,7 @@ import { useConversationStore } from "@/store/chat-store";
 
 const Conversation = ({ conversation }: { conversation: any }) => {
     const conversationImage = conversation.groupImage || conversation.image;
-    const conversationName = conversation.groupName || conversation.nbme;
+    const conversationName = conversation.groupName || conversation.name;
     const lastMessage = conversation.lastMessage;
     const lastMessageType = lastMessage?.messageType;
 

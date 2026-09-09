@@ -15,6 +15,8 @@ const LeftPanel = () => {
     const { isAuthenticated } = useConvexAuth();
     const conversations = useQuery(api.conversations.getMyConversations, isAuthenticated ? undefined : "skip");
 
+
+
     return (
         <div className='w-1/4 border-gray-600 border-r'>
             <div className='sticky top-0 bg-left-panel z-10'>
