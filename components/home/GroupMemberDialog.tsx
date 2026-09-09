@@ -47,7 +47,7 @@ const GroupMembersDialog = ({ selectedConversation }: GroupMemberDialogProps) =>
                                             <h3 className='text-md font-medium'>
                                                 {user.name || user.email.split("@")[0]}
                                             </h3>
-                                            {user.admin && <Crown size={16} className='text-yellow-400' />}
+                                            {user._id === selectedConversation.admin && <Crown size={16} className='text-yellow-400' />}
                                         </div>
                                     </div>
                                 </div>
