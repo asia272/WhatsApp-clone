@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     Dialog,
+    DialogClose,
     DialogContent,
     DialogDescription,
     DialogHeader,
@@ -24,6 +25,7 @@ const UserListDialog = () => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [renderedImage, setRenderedImage] = useState("");
     const imgRef = useRef<HTMLInputElement>(null);
+    const dialogCloseRef = useRef<HTMLButtonElement>(null);
 
     const me = useQuery(api.users.getMe);
     const users = useQuery(api.users.getAllUsers);
@@ -63,6 +65,8 @@ const UserListDialog = () => {
                 });
             }
 
+            dialogCloseRef.current?.click();
+            setSelectedUsers([]);
         } catch (err) {
 
             console.error(err);
@@ -77,7 +81,7 @@ const UserListDialog = () => {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    {/* TODO: <DialogClose /> will be here */}
+                    <DialogClose ref={dialogCloseRef} />
                     <DialogTitle>USERS</DialogTitle>
                 </DialogHeader>
 
