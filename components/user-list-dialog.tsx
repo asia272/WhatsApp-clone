@@ -17,6 +17,7 @@ import { ImageIcon, MessageSquareDiff } from "lucide-react";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import toast from "react-hot-toast";
 
 const UserListDialog = () => {
     const [selectedUsers, setSelectedUsers] = useState<Id<"users">[]>([]);
@@ -29,9 +30,8 @@ const UserListDialog = () => {
 
     const me = useQuery(api.users.getMe);
     const users = useQuery(api.users.getAllUsers);
-    const createConversation = useMutation(
-        api.conversations.createConversation
-    );
+    const createConversation = useMutation(api.conversations.createConversation);
+    const generateUploadUrl = useMutation(api.conversations.generateUploadUrl)
 
     useEffect(() => {
         if (!selectedImage) return setRenderedImage("");
@@ -54,21 +54,31 @@ const UserListDialog = () => {
                 });
             } else {
 
-                let groupImage;
+                const postUrl = await generateUploadUrl();
+
+                const result = await fetch(postUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": selectedImage?.type! },
+                    body: selectedImage
+                });
+
+                const { storageId } = await result.json();
 
                 conversationId = await createConversation({
                     participants: [...selectedUsers, me?._id!],
                     isGroup: true,
                     admin: me?._id!,
                     groupName,
-                    groupImage,
+                    groupImage: storageId
                 });
             }
 
             dialogCloseRef.current?.click();
             setSelectedUsers([]);
+            setGroupName("");
+            setSelectedImage(null)
         } catch (err) {
-
+            toast.error("Failed to create conversation")
             console.error(err);
         } finally {
             setIsLoading(false);

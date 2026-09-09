@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "./providers/theme-provider";
 import { ClerkProvider, SignInButton } from "@clerk/nextjs";
 import ConvexClientProvider from "./providers/ConvexClientProvider";
+import { Toaster } from "react-hot-toast";
 
 
 
@@ -38,8 +39,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 </SignInButton>
 
               </div>
-
               {children}
+              <Toaster />
             </ConvexClientProvider>
           </ClerkProvider>
         </ThemeProvider>
