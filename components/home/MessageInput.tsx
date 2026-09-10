@@ -2,10 +2,39 @@ import { Laugh, Mic, Plus, Send } from "lucide-react";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useConversationStore } from "@/store/chat-store";
+import toast from "react-hot-toast";
 
 const MessageInput = () => {
     const [msgText, setMsgText] = useState("");
 
+    const { selectedConversation } = useConversationStore()
+    const createMessage = useMutation(api.messages.createMessage);
+
+
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const content = msgText.trim();
+
+        if (!content) return;
+
+        try {
+            await createMessage({
+                conversation: selectedConversation!._id,
+                content,
+                messageType: "text",
+            });
+
+            setMsgText("");
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to send message");
+        }
+    };
     return (
         <div className='bg-gray-primary p-2 flex gap-4 items-center'>
             <div className='relative flex gap-2 ml-2'>
@@ -14,7 +43,7 @@ const MessageInput = () => {
                 <Plus className='text-gray-600 dark:text-gray-400' />
             </div>
             <Plus />
-            <form className='w-full flex gap-3'>
+            <form onSubmit={handleSubmit} className='w-full flex gap-3'>
                 <div className='flex-1'>
                     <Input
                         type='text'
