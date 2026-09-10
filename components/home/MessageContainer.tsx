@@ -1,18 +1,45 @@
-import { messages } from "@/dummy-data/db";
-import ChatBubble from "./ChatBubble";
 
+import ChatBubble from "./ChatBubble";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useConversationStore } from "@/store/chat-store";
 
 const MessageContainer = () => {
+    const { selectedConversation } = useConversationStore();
+
+    const me = useQuery(api.users.getMe);
+
+    const messages = useQuery(
+        api.messages.getMessages,
+        selectedConversation
+            ? {
+                conversation: selectedConversation._id,
+            }
+            : "skip"
+    );
+
     return (
-        <div className='relative p-3 flex-1 overflow-auto h-full bg-chat-tile-light dark:bg-chat-tile-dark'>
-            <div className='mx-12 flex flex-col gap-3 h-full'>
+        <div className="relative p-3 flex-1 overflow-auto h-full bg-chat-tile-light dark:bg-chat-tile-dark">
+            <div className="mx-12 flex flex-col gap-3 h-full">
                 {messages?.map((msg, idx) => (
                     <div key={msg._id}>
-                        <ChatBubble />
+                        {me && (
+                            <ChatBubble
+                                me={me}
+                                message={msg}
+                                previousMessage={
+                                    idx > 0
+                                        ? messages[idx - 1]
+                                        : undefined
+                                }
+                            />
+                        )}
                     </div>
                 ))}
             </div>
         </div>
     );
 };
+
 export default MessageContainer;
+
