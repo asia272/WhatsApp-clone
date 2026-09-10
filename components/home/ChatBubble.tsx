@@ -1,6 +1,7 @@
 import { MessageSeenSvg } from "@/lib/svgs";
 import { IMessage, useConversationStore } from "@/store/chat-store";
 import ChatBubbleAvatar from "./chat-avatar";
+import DateIndicator from "./date-indicator";
 
 type ChatBubbleProps = {
     message: IMessage;
@@ -43,7 +44,7 @@ const ChatBubble = ({
     if (!fromMe) {
         return (
             <>
-                {/* <DateIndicator message={message} previousMessage={previousMessage} /> */}
+                <DateIndicator message={message} previousMessage={previousMessage} />
 
                 <div className="flex gap-1 w-2/3">
 
@@ -73,7 +74,7 @@ const ChatBubble = ({
 
     return (
         <>
-            {/* <DateIndicator message={message} previousMessage={previousMessage} /> */}
+            <DateIndicator message={message} previousMessage={previousMessage} />
 
             <div className="flex gap-1 w-2/3 ml-auto">
                 <div
