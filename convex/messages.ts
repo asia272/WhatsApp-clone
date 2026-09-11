@@ -1,6 +1,9 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
+
+import { Id } from "./_generated/dataModel";
+
 export const createMessage = mutation({
     args: {
         conversation: v.id("conversations"),
@@ -36,7 +39,9 @@ export const createMessage = mutation({
             throw new ConvexError("Conversation not found");
         }
 
-        const isParticipant = conversation.participants.includes(user._id);
+        const isParticipant = conversation.participants.includes(
+            user._id
+        );
 
         if (!isParticipant) {
             throw new ConvexError(
@@ -48,10 +53,28 @@ export const createMessage = mutation({
             throw new ConvexError("Message cannot be empty");
         }
 
+        let messageContent = args.content;
+
+        // Get URL from Convex Storage for image/video
+        if (
+            args.messageType === "image" ||
+            args.messageType === "video"
+        ) {
+            const storageId = args.content as Id<"_storage">;
+
+            const mediaUrl = await ctx.storage.getUrl(storageId);
+
+            if (!mediaUrl) {
+                throw new ConvexError("Media file not found");
+            }
+
+            messageContent = mediaUrl;
+        }
+
         const messageId = await ctx.db.insert("messages", {
             conversation: args.conversation,
             sender: user._id.toString(),
-            content: args.content.trim(),
+            content: messageContent,
             messageType: args.messageType,
         });
 
