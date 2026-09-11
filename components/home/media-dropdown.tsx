@@ -41,7 +41,7 @@ const MediaDropdown = () => {
             // Generate Convex upload URL
             const postUrl = await generateUploadUrl();
 
-            // Upload file to Convex storage
+            // Upload file to Convex Storage
             const result = await fetch(postUrl, {
                 method: "POST",
                 headers: {
@@ -65,6 +65,16 @@ const MediaDropdown = () => {
                 content: storageId,
                 messageType,
             });
+
+            // IMPORTANT:
+            // Reset file inputs so the same file can be selected again
+            if (imageInput.current) {
+                imageInput.current.value = "";
+            }
+
+            if (videoInput.current) {
+                videoInput.current.value = "";
+            }
 
             // Clear selected media
             setSelectedImage(null);

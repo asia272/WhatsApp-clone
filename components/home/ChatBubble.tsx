@@ -2,6 +2,7 @@ import { MessageSeenSvg } from "@/lib/svgs";
 import { IMessage, useConversationStore } from "@/store/chat-store";
 import ChatBubbleAvatar from "./chat-avatar";
 import DateIndicator from "./date-indicator";
+import ReactPlayer from "react-player";
 
 type ChatBubbleProps = {
     message: IMessage;
@@ -38,7 +39,16 @@ const ChatBubble = ({
         : "bg-blue-500 text-white";
 
     const renderMessageContent = () => {
-        return <TextMessage message={message} />;
+        switch (message.messageType) {
+            case "text":
+                return <TextMessage message={message} />;
+            case "image":
+                return <ImageMessage message={message} />;
+            case "video":
+                return <VideoMessage message={message} />;
+            default:
+                return null;
+        }
     };
 
     if (!fromMe) {
@@ -137,6 +147,20 @@ const TextMessage = ({ message }: { message: IMessage }) => {
                     {message.content}
                 </p>
             )}
+        </div>
+    );
+};
+const VideoMessage = ({ message }: { message: IMessage }) => {
+    return <ReactPlayer src={message.content} width='250px' height='250px' controls={true} light={true} />;
+};
+const ImageMessage = ({ message }: { message: IMessage }) => {
+    return (
+        <div className='w-[250px] h-[250px] m-2 relative'>
+            <img
+                src={message.content}
+                className='cursor-pointer object-cover rounded'
+                alt='image'
+            />
         </div>
     );
 };
