@@ -3,6 +3,7 @@ import { IMessage, useConversationStore } from "@/store/chat-store";
 import ChatBubbleAvatar from "./chat-avatar";
 import DateIndicator from "./date-indicator";
 import ReactPlayer from "react-player";
+import ChatAvatarActions from "./ChatAvatarAction";
 
 type ChatBubbleProps = {
     message: IMessage;
@@ -69,7 +70,7 @@ const ChatBubble = ({
                         className={`flex flex-col z-20 max-w-fit px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}
                     >
                         <OtherMessageIndicator />
-
+                        {isGroup && < ChatAvatarActions message={message} me={me} />}//for delete user, only admin can delete user
                         {renderMessageContent()}
 
                         <MessageTime
