@@ -69,8 +69,9 @@ const ChatBubble = ({
                     <div
                         className={`flex flex-col z-20 max-w-fit px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}
                     >
+
                         <OtherMessageIndicator />
-                        {isGroup && < ChatAvatarActions message={message} me={me} />}//for delete user, only admin can delete user
+                        {isGroup && < ChatAvatarActions message={message} me={me} />} {/* //for delete user, only admin can delete user */}
                         {renderMessageContent()}
 
                         <MessageTime
