@@ -52,21 +52,23 @@
 }
 
 :root {
-  --background: 48 8% 88%;
+  --background: 48, 8%, 88%;
+  /* CHANGED */
   --foreground: 222.2 84% 4.9%;
 
-  --container: 0 0% 100%;
-  --left-panel: 203 32% 10%;
+  /* CLASSES ADDED BY US */
+  --container: 0 0 100%;
+  --left-panel: 203, 32%, 10%;
 
-  --gray-primary: 216 20% 95%;
-  --gray-secondary: 216 20% 95%;
-  --gray-tertiary: 216 20% 90%;
+  --gray-primary: 216, 20%, 95%;
+  --gray-secondary: 216, 20%, 95%;
 
-  --chat-hover: 180 5% 96%;
+  --left-panel: 100, 100%, 100%;
+  --chat-hover: 180, 5%, 96%;
 
-  --green-primary: 167 100% 33%;
-  --green-secondary: 165 100% 39%;
-  --green-chat: 111 91% 91%;
+  --green-primary: 167, 100%, 33%;
+  --green-chat: 111, 91%, 91%;
+  /* CLASSES ADDED BY US */
 
   --card: 0 0% 100%;
   --card-foreground: 222.2 84% 4.9%;
