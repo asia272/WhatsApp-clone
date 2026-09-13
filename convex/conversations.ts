@@ -62,8 +62,8 @@ export const getMyConversations = query({
             )
             .unique();
 
-        if (!user) throw new ConvexError("User not found");
-
+        // if (!user) throw new ConvexError("User not found");
+        if (!user) return null;
         const conversations = await ctx.db.query("conversations").collect();
 
         const myConversations = conversations.filter((conversation) => {
