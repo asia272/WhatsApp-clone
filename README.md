@@ -4,7 +4,7 @@ A full-stack, real-time WhatsApp-inspired chat application built with **Next.js,
 
 ## 📸 Preview
 
-![WhatsApp Clone](public/whatsapp.png)
+![WhatsApp Clone](public/whatsapp_clone.png)
 
 ## 🚀 Live Demo
 
